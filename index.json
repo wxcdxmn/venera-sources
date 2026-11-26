@@ -3,14 +3,14 @@
         "name": "TOONTOP",
         "fileName": "toontop.js",
         "key": "toontop",
-        "version": "1.3.2",
+        "version": "1.3.3",
         "description": "TOONTOP (toontop.io) 漫画源：接口 + 网页 SSR 双通道，首页 7 区块、72 项题材筛选、全量章节目录"
     },
     {
         "name": "MANGA18FX",
         "fileName": "m18.js",
         "key": "manga18fx",
-        "version": "1.0.3",
+        "version": "1.0.4",
         "description": "MANGA18FX (manga18fx.com) 漫画源：最近更新 + 热度榜探索、23 项题材与榜单分类、关键词搜索、全量章节目录与正文大图"
     }
 ]
