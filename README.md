@@ -22,24 +22,41 @@ https://cdn.jsdelivr.net/gh/wxcdxmn/venera-sources/index.json
 | TOONTOP | `https://cdn.jsdelivr.net/gh/wxcdxmn/venera-sources/toontop.js` |
 | MANGA18FX | `https://cdn.jsdelivr.net/gh/wxcdxmn/venera-sources/m18.js` |
 
-### 为什么地址里没有 `@main`
+### 地址怎么写，才既能自动更新又不拿到坏版本
 
-jsDelivr 的 `@main` 是**别名缓存**，分支一动它就落后；实测同一时刻：
+jsDelivr 的 `@main` 是**别名缓存**，落后得最厉害；无 ref 形式（下面这些）会紧跟默认分支，实测落后一版左右，
+边缘最坏情况仍是 12 小时 TTL。两者的差别实测如下（同一时刻）：
 
 | 地址形态 | 拿到的版本 |
 | --- | --- |
-| `.../venera-sources/index.json`（无 ref） | 1.3.3 / 1.0.4 ✅ |
-| `.../venera-sources@main/index.json` | 1.3.1 / 1.0.1 ❌ |
+| `.../venera-sources/index.json`（无 ref） | 1.3.2 / 1.0.3 |
+| `.../venera-sources@main/index.json` | 1.3.1 / 1.0.1 |
 
-无 ref 形式由 jsDelivr 在请求时解析默认分支，发版后立即生效，适合做自动更新的地址；
-`@v1.0.4` 这种 tag 地址永远返回发布那一刻的内容，适合临时排障，但不会自动升级。
+所以本仓库的源内部 `url`、以及推荐你订阅的地址，全部用**无 ref** 形式：
 
-所以：**订阅与添加到源都用无 ref 地址**，源内部 `url` 字段也是无 ref 地址，App 点「更新」拿到的就是最新代码。
+```
+https://cdn.jsdelivr.net/gh/wxcdxmn/venera-sources/index.json
+https://cdn.jsdelivr.net/gh/wxcdxmn/venera-sources/m18.js
+https://cdn.jsdelivr.net/gh/wxcdxmn/venera-sources/toontop.js
+```
 
-备用域名（jsDelivr 抽风时，需要能直连 GitHub）：
+要**立刻**拿到最新版（不等 CDN），用 GitHub 原始地址，无任何缓存：
 
 ```
 https://raw.githubusercontent.com/wxcdxmn/venera-sources/main/index.json
+https://raw.githubusercontent.com/wxcdxmn/venera-sources/main/m18.js
+https://raw.githubusercontent.com/wxcdxmn/venera-sources/main/toontop.js
+```
+
+`@v1.0.4` 这类 tag 地址永远返回发布那一刻的内容，不会自动升级，只适合排障时锁定版本。
+从 1.0.3 起历史上的坏版本（1.0.0 / 1.0.1）已被覆盖，即使 CDN 滞后也只会拿到"旧一点但能用"的版本。
+
+手动催更（可选，返回 `finished` 不代表所有边缘都刷新了）：
+
+```
+https://purge.jsdelivr.net/gh/wxcdxmn/venera-sources/index.json
+https://purge.jsdelivr.net/gh/wxcdxmn/venera-sources/m18.js
+https://purge.jsdelivr.net/gh/wxcdxmn/venera-sources/toontop.js
 ```
 
 ## 配置包
