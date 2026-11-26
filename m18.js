@@ -2,7 +2,7 @@
 class Manga18fx extends ComicSource {
   name = "MANGA18FX";
   key = "manga18fx";
-  version = "1.0.1";
+  version = "1.0.2";
   minAppVersion = "1.6.0";
   // 发布到仓库后的 js 直链，用于跟随 index.json 版本更新
   url = "https://cdn.jsdelivr.net/gh/wxcdxmn/venera-sources@main/m18.js";
@@ -249,27 +249,54 @@ class Manga18fx extends ComicSource {
 
   // ---------------- 分类 ----------------
 
+  // 分类结构必须用 parts（App 端 parser 会遍历 category.parts，缺失直接抛异常导致整源被丢弃）
   category = {
     title: "MANGA18FX",
-    categories: (() => {
-      const g = {};
-      const keys = Object.keys(this.genres);
-      for (const k of keys) g[k] = this.genres[k];
-      return {
-        题材: g,
-        榜单: { hot: "热度榜", latest: "最近更新" },
-      };
-    })(),
+    parts: [
+      {
+        name: "题材",
+        type: "fixed",
+        categories: [
+          "全部", "Action", "Adventure", "Comedy", "Drama", "Ecchi", "Fantasy",
+          "Harem", "Isekai", "Manhua", "Manhwa", "Mature", "Mystery",
+          "Psychological", "Reincarnation", "Romance", "School Life", "Seinen",
+          "Shoujo", "Shounen", "Supernatural", "Thriller", "Tragedy",
+          "Uncensored Manhwa",
+        ],
+        categoryParams: [
+          "", "action", "adventure", "comedy", "drama", "ecchi", "fantasy",
+          "harem", "isekai", "manhua", "manhwa", "mature", "mystery",
+          "psychological", "reincarnation", "romance", "school-life", "seinen",
+          "shoujo", "shounen", "supernatural", "thriller", "tragedy",
+          "uncensored-manhwa",
+        ],
+        itemType: "category",
+      },
+      {
+        name: "榜单",
+        type: "fixed",
+        categories: ["热度榜", "最近更新"],
+        categoryParams: ["hot", "latest"],
+        itemType: "category",
+      },
+    ],
+    enableRankingPage: false,
+  };
+
+  // 分类内容加载器：App 端只认 categoryComics.load(category, param, options, page)
+  categoryComics = {
     load: async (category, param, options, page) => {
       const p = Math.max(1, Number(page) || 1);
+      const tag = String(param === null || param === undefined ? "" : param).trim();
       let url = "";
-      if (category === "榜单") {
-        if (param === "hot") url = this.buildUrl(this.site + "/hot-manga", { page: p });
-        else url = this.buildUrl(this.site + "/", { page: p });
+      if (String(category) === "榜单") {
+        url = tag === "latest"
+          ? this.buildUrl(this.site + "/", { page: p })
+          : this.buildUrl(this.site + "/hot-manga", { page: p });
+      } else if (!tag) {
+        url = this.buildUrl(this.site + "/", { page: p });
       } else {
-        const slug = String(param || "").trim();
-        if (!slug) throw "题材为空";
-        url = this.buildUrl(this.site + "/manga-genre/" + encodeURIComponent(slug), { page: p });
+        url = this.buildUrl(this.site + "/manga-genre/" + encodeURIComponent(tag), { page: p });
       }
       const html = await this.fetch(url);
       return {
