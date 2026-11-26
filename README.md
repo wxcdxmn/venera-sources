@@ -9,11 +9,20 @@
 
 ## 订阅
 
-索引（推荐，App 内「源仓库」添加这一条即可同时拿到两个源）：
+订阅索引（App 内「源仓库」添加这一条即可同时拿到两个源）：
 
 ```
-https://cdn.jsdelivr.net/gh/wxcdxmn/venera-sources@main/index.json
+https://cdn.jsdelivr.net/gh/wxcdxmn/venera-sources@v1.0.3/index.json
 ```
+
+用固定 tag 而不是 `@main`：jsDelivr 对分支别名有最长 12 小时缓存，发布后一段时间内 `@main` 仍会返回旧文件
+（本次实测 `cdn.jsdelivr.net/...@main/m18.js` 还在发 1.0.1，而 `@v1.0.3` 已是 1.0.3）。
+代价是源不会自动跟随更新，需要换新 tag 才能升级；想自动跟随就改用：
+
+```
+https://fastly.jsdelivr.net/gh/wxcdxmn/venera-sources@main/index.json
+```
+（`fastly` / `testingcf` 两个节点本次实测是新鲜的，`cdn` 与 `gcore` 滞后。）
 
 | 源 | 直链（固定 tag，绕开 CDN 缓存） |
 | --- | --- |
@@ -52,6 +61,7 @@ jsDelivr 对 `@main` 有最长 12 小时缓存，改完文件需要手动清：
 https://purge.jsdelivr.net/gh/wxcdxmn/venera-sources@main/index.json
 https://purge.jsdelivr.net/gh/wxcdxmn/venera-sources@main/toontop.js
 https://purge.jsdelivr.net/gh/wxcdxmn/venera-sources@main/m18.js
+# purge 返回 finished 不代表边缘已刷新，可用 fastly.jsdelivr.net 对照验证
 ```
 
 版本号写在 `index.json` 与各 js 的 `version` 字段，两边要一起改，App 才会提示更新。
