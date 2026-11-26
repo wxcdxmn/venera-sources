@@ -2,10 +2,10 @@
 class Manga18fx extends ComicSource {
   name = "MANGA18FX";
   key = "manga18fx";
-  version = "1.0.3";
+  version = "1.0.4";
   minAppVersion = "1.6.0";
   // 发布到仓库后的 js 直链，用于跟随 index.json 版本更新
-  url = "https://cdn.jsdelivr.net/gh/wxcdxmn/venera-sources@main/m18.js";
+  url = "https://cdn.jsdelivr.net/gh/wxcdxmn/venera-sources/m18.js";
   site = "https://manga18fx.com";
   pageSize = 24;
 
