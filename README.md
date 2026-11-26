@@ -59,9 +59,26 @@ https://purge.jsdelivr.net/gh/wxcdxmn/venera-sources/m18.js
 https://purge.jsdelivr.net/gh/wxcdxmn/venera-sources/toontop.js
 ```
 
-## 配置包
+## 只能导入 `.venera`？看这一节
 
-VeneraX 只认 `.venera` 文件。**导入 .venera 是整体替换源目录**，所以按需选：
+VeneraX 没有「加源 / 订阅」入口时，全部走文件导入。三种用法，按你的需求选：
+
+| 我想要的 | 下哪个 | 结果 |
+| --- | --- | --- |
+| 两个源都要，且不能弄丢原来的 54 个源 | `additive-VeneraX.venera` | 54 → 56 个源，**其余原样保留** |
+| 只要这两个源，其它都不要 | `venera-sources-VeneraX.venera` | 只剩 2 个源 |
+| 一个一个加，先只加 TOONTOP / 只加 MANGA18FX | `TOONTOP-single-VeneraX.venera`、`MANGA18FX-single-VeneraX.venera` | 只含 1 个源 |
+
+下载：`https://github.com/wxcdxmn/venera-sources/releases/latest`
+
+**单源包也带自动更新**：包内源的 `url` 写的就是 jsDelivr 直链，导入后在「源管理 → 检查更新」
+只会重下这一个源的文件，不会动别的源。所以「两个源各自独立更新」在导入之后就是原生的，不需要再整包导入。
+
+⚠️ 一个必须知道的机制：Venera 的 `.venera` 导入是**整体替换源目录**（先删 `comic_source/` 再解包）。
+所以单源包适合「只要一个源」或「先导入单源包、再导入另一个单源包」的干净环境；
+源目录里已有别的源时，用加法包 `additive-*.venera`，别用单源包。
+
+## 配置包
 
 | 文件 | 源数 | 用途 |
 | --- | --- | --- |
@@ -69,6 +86,10 @@ VeneraX 只认 `.venera` 文件。**导入 .venera 是整体替换源目录**，
 | `仅添加_原始包+TOONTOP+MANGA18FX_Venera通用版.venera` | 54 → 56 | 同上，带 `manifest.json` |
 | `venera-sources_VeneraX（基于Next新版）.venera` | 2 | 只要这两个源，**会清空其它源** |
 | `venera-sources_Venera通用版.venera` | 2 | 同上 |
+| `TOONTOP-single-VeneraX.venera` / `MANGA18FX-single-VeneraX.venera` | 1 | 单源包，**会清空其它源** |
+| `TOONTOP-single-universal.venera` / `MANGA18FX-single-universal.venera` | 1 | 同上，带 `manifest.json` |
+
+`manifest.json` 里的文件清单已按包内实际内容重写，不再残留原始 54 源的文件名。
 
 也能从 Release 下载同样内容：
 `https://github.com/wxcdxmn/venera-sources/releases/latest`
@@ -90,7 +111,7 @@ https://purge.jsdelivr.net/gh/wxcdxmn/venera-sources@main/m18.js
 
 1. 改 `toontop/toontop.js` 或 `m18/m18.js` 并升 `version`
 2. 同步到 `combined/`，改 `index.json` 的版本
-3. `python venera_pkg/build_additive.py`、`python combined/build_combined.py`、`python venera_pkg/build_venera.py`、`python m18/build_pkg_m18.py` 重打包
+3. `python venera_pkg/build_additive.py`、`python combined/build_combined.py`、`python combined/build_single.py`、`python venera_pkg/build_venera.py`、`python m18/build_pkg_m18.py` 重打包
 4. 提交推送 + 打新 tag + 建 Release + purge jsDelivr
 
 ## 目录
@@ -99,7 +120,8 @@ https://purge.jsdelivr.net/gh/wxcdxmn/venera-sources@main/m18.js
 index.json     两个源的索引（name / fileName / key / version / description）
 toontop.js     TOONTOP 源
 m18.js         MANGA18FX 源
-*.venera       配置包（2 源 / 加法版），供 VeneraX 直接导入
+*.venera       配置包（加法版 / 2 源 / 单源），供 VeneraX 直接导入
+build_single.py  单源包生成脚本（manifest 按实际内容重写）
 ```
 
 ## 说明
