@@ -2,7 +2,7 @@
 class ToonTop extends ComicSource {
   name = "TOONTOP";
   key = "toontop";
-  version = "1.3.1";
+  version = "1.3.2";
   minAppVersion = "1.6.0";
   // 发布到仓库后的 js 直链，用于跟随 index.json 版本更新
   // 用 jsDelivr CDN 而非 raw.githubusercontent：实测 raw 在本机/国内直连超时，jsDelivr 四个镜像均 200
