@@ -4,34 +4,37 @@
 
 | 源 | 站点 | 版本 | 特点 |
 | --- | --- | --- | --- |
-| **TOONTOP** | toontop.io | 1.3.2 | 接口 + 网页 SSR 双通道，首页 7 区块、72 项题材筛选、全量章节目录 |
-| **MANGA18FX** | manga18fx.com | 1.0.3 | 纯网页解析，最近更新 + 热度榜、23 项题材、关键词搜索、正文大图 |
+| **TOONTOP** | toontop.io | 1.3.3 | 接口 + 网页 SSR 双通道，首页 7 区块、72 项题材筛选、全量章节目录 |
+| **MANGA18FX** | manga18fx.com | 1.0.4 | 纯网页解析，最近更新 + 热度榜、23 项题材、关键词搜索、正文大图 |
 
-## 订阅
+## 订阅（推荐：自动更新，且只加这两个源）
 
-订阅索引（App 内「源仓库」添加这一条即可同时拿到两个源）：
-
-```
-https://cdn.jsdelivr.net/gh/wxcdxmn/venera-sources@v1.0.3/index.json
-```
-
-用固定 tag 而不是 `@main`：jsDelivr 对分支别名有最长 12 小时缓存，发布后一段时间内 `@main` 仍会返回旧文件
-（本次实测 `cdn.jsdelivr.net/...@main/m18.js` 还在发 1.0.1，而 `@v1.0.3` 已是 1.0.3）。
-代价是源不会自动跟随更新，需要换新 tag 才能升级；想自动跟随就改用：
+App 内「源仓库 / 订阅」填这一条，只会注册并拉取这两个源，**不动你已有的其它源**：
 
 ```
-https://fastly.jsdelivr.net/gh/wxcdxmn/venera-sources@main/index.json
+https://cdn.jsdelivr.net/gh/wxcdxmn/venera-sources/index.json
 ```
-（`fastly` / `testingcf` 两个节点本次实测是新鲜的，`cdn` 与 `gcore` 滞后。）
 
-| 源 | 直链（固定 tag，绕开 CDN 缓存） |
+单独加某一个源，直接填对应直链即可（同样是自动跟随更新）：
+
+| 源 | 直链 |
 | --- | --- |
-| TOONTOP | `https://cdn.jsdelivr.net/gh/wxcdxmn/venera-sources@v1.0.3/toontop.js` |
-| MANGA18FX | `https://cdn.jsdelivr.net/gh/wxcdxmn/venera-sources@v1.0.3/m18.js` |
+| TOONTOP | `https://cdn.jsdelivr.net/gh/wxcdxmn/venera-sources/toontop.js` |
+| MANGA18FX | `https://cdn.jsdelivr.net/gh/wxcdxmn/venera-sources/m18.js` |
 
-也可以把 `@v1.0.3` 换成 `@main`，但 jsDelivr 对 `@main` 有最长 12 小时缓存，
-刚改完代码时容易拿到旧文件（表现为 App 报 `type 'Null' is not a subtype of type 'Iterable<dynamic>'`）。
-固定 tag 的地址在发布后即可取到正确内容，适合"添加源"时使用；装好之后源内部会跟 `@main` 走，正常更新不受影响。
+### 为什么地址里没有 `@main`
+
+jsDelivr 的 `@main` 是**别名缓存**，分支一动它就落后；实测同一时刻：
+
+| 地址形态 | 拿到的版本 |
+| --- | --- |
+| `.../venera-sources/index.json`（无 ref） | 1.3.3 / 1.0.4 ✅ |
+| `.../venera-sources@main/index.json` | 1.3.1 / 1.0.1 ❌ |
+
+无 ref 形式由 jsDelivr 在请求时解析默认分支，发版后立即生效，适合做自动更新的地址；
+`@v1.0.4` 这种 tag 地址永远返回发布那一刻的内容，适合临时排障，但不会自动升级。
+
+所以：**订阅与添加到源都用无 ref 地址**，源内部 `url` 字段也是无 ref 地址，App 点「更新」拿到的就是最新代码。
 
 备用域名（jsDelivr 抽风时，需要能直连 GitHub）：
 
