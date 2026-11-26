@@ -15,10 +15,13 @@
 https://cdn.jsdelivr.net/gh/wxcdxmn/venera-sources@main/index.json
 ```
 
-| 源 | 直链 |
+| 源 | 直链（固定版本，绕开 CDN 缓存） |
 | --- | --- |
-| TOONTOP | `https://cdn.jsdelivr.net/gh/wxcdxmn/venera-sources@main/toontop.js` |
-| MANGA18FX | `https://cdn.jsdelivr.net/gh/wxcdxmn/venera-sources@main/m18.js` |
+| TOONTOP | `https://cdn.jsdelivr.net/gh/wxcdxmn/venera-sources@v1.0.2/toontop.js` |
+| MANGA18FX | `https://cdn.jsdelivr.net/gh/wxcdxmn/venera-sources@v1.0.2/m18.js` |
+
+也可以把 `@v1.0.2` 换成 `@main`，但 jsDelivr 对 `@main` 有最长 12 小时缓存，
+刚改完代码时容易拿到旧文件（表现为 App 报 `type 'Null' is not a subtype of type 'Iterable<dynamic>'`）。
 
 备用域名（jsDelivr 抽风时）：
 
